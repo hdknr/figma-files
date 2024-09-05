@@ -1,12 +1,16 @@
 [tool.poetry]
-name = "figma-files"
+name = "figma_files"
 version = "0.1.0"
 description = ""
 authors = ["user.name <gmail@hdknr.com>"]
 readme = "README.md"
+license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.12"
+click = "^8.1.7"
+requests = "^2.32.3"
+python-dotenv = "^1.0.1"
 
 
 [build-system]
