@@ -35,10 +35,8 @@ class Frame(Node):
     exportSettings = Optional[list[ExportSetting]] = []
     BlendMode: BlendMode
     preserveRatio: Optional[bool] = False
-    constraints = Optional[LayoutConstraint] = None
-    layoutAlign = Optional[
-        Literal["INHERIT", "STRETCH", "MIN", "CENTER", "MAX", "STRETCH"]
-    ]
+    constraints: Optional[LayoutConstraint] = None
+    layoutAlign: Optional[Literal["INHERIT", "STRETCH", "MIN", "CENTER", "MAX", "STRETCH"]]
     #
     transitionNodeID: Optional[str] = None
     transitionDuration: Optional[float] = None
@@ -64,9 +62,7 @@ class Frame(Node):
     layoutWrap: Optional[Literal["NO_WRAP", "WRAP"]] = "NO_WRAP"
     primaryAxisSizingMode: Optional[Literal["FIXED", "AUTO"]] = "AUTO"
     counterAxisSizingMode: Optional[Literal["FIXED", "AUTO"]] = "AUTO"
-    primaryAxisAlignItems: Optional[
-        Literal["MIN", "CENTER", "MAX", "SPACE_BETWEEN"]
-    ] = "MIN"
+    primaryAxisAlignItems: Optional[Literal["MIN", "CENTER", "MAX", "SPACE_BETWEEN"]] = "MIN"
     counterAxisAlignItems: Optional[Literal["MIN", "CENTER", "MAX", "BASELINE"]] = "MIN"
     counterAxisAlignContent: Optional[Literal["AUTO", "SPACE_BETWEEN"]] = "AUTO"
     #

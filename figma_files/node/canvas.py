@@ -7,5 +7,5 @@ class Canvas(Node):
     backgroundColor: Color
     prototypeStartNodeID: Optional[str] = None
     flowStartingPoints: Optional[list[FlowStartingPoint]] = None
-    exportSettings = Optional[list[ExportSetting]] = []
-    measurements = Optional[list[Measurement]] = []
+    exportSettings: Optional[list[ExportSetting]] = []
+    measurements: Optional[list[Measurement]] = []

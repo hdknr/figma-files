@@ -36,7 +36,7 @@ class Constraint(BaseModel):
 
 class MeasurementStartEnd(BaseModel):
     nodeId: str
-    side = Literal["TOP", "RIGHT", "BOTTOM", "LEFT"]
+    side: Literal["TOP", "RIGHT", "BOTTOM", "LEFT"]
 
 
 class MeasurementOffset(BaseModel):
@@ -170,7 +170,7 @@ class DevStatus(BaseModel):
 
 
 class AnnotationProperty(BaseModel):
-    type = Literal[
+    type: Literal[
         "width",
         "height",
         "maxWidth",
@@ -256,7 +256,7 @@ class TypeStyle(BaseModel):
     lineHeightPx: float
     lineHeightPercent: Optional[float] = 100
     lineHeightPercentFontSize: float
-    lineHeightUnit = Optional[Literal["PIXELS", "FONT_SIZE_%", "INTRINSIC_%"]]
+    lineHeightUnit: Optional[Literal["PIXELS", "FONT_SIZE_%", "INTRINSIC_%"]]
     isOverrideOverTextStyle: bool
     semanticWeight: Optional[Literal["BOLD", "NORMAL"]]
     semanticItalic: Optional[Literal["ITALIC", "NORMAL"]]
