@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 import os
 from figma_files import rest
 import json
+import requests
+import mimetypes
 
 
 @click.group()
@@ -37,6 +39,21 @@ def get_doc(ctx, file_key, output):
         images = response.json()
         with open(path, "w") as out:
             json.dump(images, out, indent=2, ensure_ascii=False)
+
+        img = Path(output) / "img"
+        img.mkdir(exist_ok=True)
+
+        def _download(entry):
+            key, url = entry
+            print(key, url)
+            response = requests.get(url)
+            if response.status_code == 200:
+                ext = mimetypes.guess_extension(response.headers["Content-Type"])
+                path = img / f"{key}.{ext}"
+                with open(path, "wb") as f:
+                    f.write(response.content)
+
+        list(map(_download, images["meta"]["images"].items()))
 
 
 if __name__ == "__main__":
