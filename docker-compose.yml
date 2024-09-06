@@ -1,0 +1,10 @@
+services:
+  fig:
+    build:
+      context: .
+      dockerfile: ./docker/local/Dockerfile
+      args:
+        BASE: /home/app
+    working_dir: /home/app
+    volumes:
+      - .:/home/app
