@@ -11,8 +11,6 @@ ENV LC_ALL ja_JP.UTF-8
 ENV TZ JST-9
 ENV TERM xterm
 
-
-
 #
 WORKDIR ${BASE}
 #
@@ -20,7 +18,7 @@ RUN pip install --upgrade pip poetry
 RUN poetry config virtualenvs.create false
 
 #
-COPY pyproject.toml poetry.lock ${BASE}
-COPY figma_files ${BASE}
+COPY pyproject.toml poetry.lock README.md ${BASE}/
+COPY figma_files/ ${BASE}/figma_files/
 RUN poetry install
 
