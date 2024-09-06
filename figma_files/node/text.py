@@ -1,5 +1,5 @@
 from .vector import Vector
-from .primitives import TypeStyle
+from ..base.primitives import TypeStyle
 from typing import Optional, List, Literal
 
 

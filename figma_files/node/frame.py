@@ -1,5 +1,5 @@
 from .node import Node
-from .primitives import (
+from ..base.primitives import (
     Paint,
     Color,
     ExportSetting,

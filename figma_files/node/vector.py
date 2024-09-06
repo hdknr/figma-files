@@ -1,5 +1,5 @@
-from .node import Node, AbstractTransition
-from .primitives import (
+from .node import Node
+from ..base.primitives import (
     ExportSetting,
     BlendMode,
     LayoutConstraint,
@@ -8,11 +8,12 @@ from .primitives import (
     Transform,
     Paint,
     Annotation,
+    EasingType,
 )
 from typing import Optional, List, Literal
 
 
-class Vector(Node, AbstractTransition):
+class Vector(Node):
     locked: Optional[bool] = False
     exportSettings = Optional[list[ExportSetting]] = []
     BlendMode: BlendMode
@@ -25,6 +26,10 @@ class Vector(Node, AbstractTransition):
     opacity: Optional[float] = 1
     absoluteBoundingBox: Optional[Rectangle] = None
     absoluteRenderBounds: Optional[Rectangle] = None
+    #
+    transitionNodeID: Optional[str] = None
+    transitionDuration: Optional[float] = None
+    transitionEasing: Optional[EasingType] = None
     #
     size: PrimitiveVector
     relativeTransform: Optional[Transform] = None

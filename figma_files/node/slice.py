@@ -1,6 +1,6 @@
 from .node import Node
 from typing import Optional
-from .primitives import ExportSetting, Rectangle, Vector, Transform
+from ..base.primitives import ExportSetting, Rectangle, Vector, Transform
 
 
 class Slice(Node):

@@ -1,5 +1,5 @@
 from .node import Node
-from .primitives import Paint, Rectangle, DevStatus
+from ..base.primitives import Paint, Rectangle, DevStatus
 from typing import Optional, List, Literal
 
 
