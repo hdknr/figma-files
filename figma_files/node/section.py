@@ -5,7 +5,7 @@ from typing import Optional, List, Literal
 
 class Section(Node):
     sectionContentsHidden: Optional[bool] = False
-    devStatus = Optional[DevStatus] = None
+    devStatus: Optional[DevStatus] = None
     fills: Optional[List[Paint]] = []
     strokes: Optional[List[Paint]] = []
     strokeAlign: Optional[Literal["INSIDE", "OUTSIDE", "CENTER"]] = None

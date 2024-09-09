@@ -15,13 +15,15 @@ from typing import Optional, List, Literal
 
 class Vector(Node):
     locked: Optional[bool] = False
-    exportSettings = Optional[list[ExportSetting]] = []
-    BlendMode: BlendMode
+    exportSettings: Optional[list[ExportSetting]] = []
+    blendMode: BlendMode
     preserveRatio: Optional[bool] = False
-    layoutAlign = Optional[Literal["INHERIT", "STRETCH", "MIN", "CENTER", "MAX", "STRETCH"]]
+    layoutAlign: Optional[
+        Literal["INHERIT", "STRETCH", "MIN", "CENTER", "MAX", "STRETCH"]
+    ] = None
 
     layoutGrow: Optional[float] = 0
-    constraints = Optional[LayoutConstraint] = None
+    constraints: Optional[LayoutConstraint] = None
     #
     opacity: Optional[float] = 1
     absoluteBoundingBox: Optional[Rectangle] = None
@@ -31,7 +33,7 @@ class Vector(Node):
     transitionDuration: Optional[float] = None
     transitionEasing: Optional[EasingType] = None
     #
-    size: PrimitiveVector
+    size: Optional[PrimitiveVector] = None
     relativeTransform: Optional[Transform] = None
     #
     isMask: Optional[bool] = False
@@ -39,7 +41,7 @@ class Vector(Node):
     fills: Optional[List[Paint]] = []
     fillGeometry: Optional[List[Paint]] = []
     #
-    fillOverrideTable = Optional[dict] = None
+    fillOverrideTable: Optional[dict] = None
     strokes: Optional[List[Paint]] = []
     strokeWeight: Optional[float] = None
     strokeCap: Optional[
@@ -65,5 +67,5 @@ class Vector(Node):
     strokeMiterAngle: Optional[float] = 28.96
     strokeGeometry: Optional[List[Paint]] = []
     strokeAlign: Optional[Literal["INSIDE", "OUTSIDE", "CENTER"]] = None
-    styles = Optional[dict] = None
-    annotations = Optional[List[Annotation]] = []
+    styles: Optional[dict] = None
+    annotations: Optional[List[Annotation]] = []

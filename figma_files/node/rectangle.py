@@ -3,6 +3,6 @@ from typing import Optional, List
 
 
 class Rectangle(Vector):
-    cornerRadius: float
+    cornerRadius: Optional[float] = None
     rectangleCornerRadii: Optional[List[float]] = []
-    cornerSmoothing: float
+    cornerSmoothing: Optional[float] = None

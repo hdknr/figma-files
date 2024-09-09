@@ -28,15 +28,17 @@ class Frame(Node):
     strokeAlign: Optional[Literal["INSIDE", "OUTSIDE", "CENTER"]] = None
     strokeDashes: Optional[List[float]] = []
     #
-    cornerRadius: float
-    rectangleCornerRadii: List[float]
-    cornerSmoothing: float
+    cornerRadius: Optional[float] = None
+    rectangleCornerRadii: Optional[List[float]] = []
+    cornerSmoothing: Optional[float] = None
     #
-    exportSettings = Optional[list[ExportSetting]] = []
-    BlendMode: BlendMode
+    exportSettings: Optional[list[ExportSetting]] = []
+    blendMode: BlendMode
     preserveRatio: Optional[bool] = False
     constraints: Optional[LayoutConstraint] = None
-    layoutAlign: Optional[Literal["INHERIT", "STRETCH", "MIN", "CENTER", "MAX", "STRETCH"]]
+    layoutAlign: Optional[
+        Literal["INHERIT", "STRETCH", "MIN", "CENTER", "MAX", "STRETCH"]
+    ] = None
     #
     transitionNodeID: Optional[str] = None
     transitionDuration: Optional[float] = None
@@ -46,7 +48,7 @@ class Frame(Node):
     absoluteBoundingBox: Optional[Rectangle] = None
     absoluteRenderBounds: Optional[Rectangle] = None
     #
-    size: Vector
+    size: Optional[Vector] = None
     minWidth: Optional[float] = None
     maxWidth: Optional[float] = None
     minHeight: Optional[float] = None
@@ -57,12 +59,14 @@ class Frame(Node):
     clipsContent: bool
     #
     layoutMode: Optional[Literal["NONE", "HORIZONTAL", "VERTICAL"]] = "NONE"
-    layoutSizingHorizontal: Literal["NONE", "HUG", "FILL"]
-    layoutSizingVertical: Literal["NONE", "HUG", "FILL"]
+    layoutSizingHorizontal: Literal["NONE", "HUG", "FILL"] = None
+    layoutSizingVertical: Literal["NONE", "HUG", "FILL"] = None
     layoutWrap: Optional[Literal["NO_WRAP", "WRAP"]] = "NO_WRAP"
     primaryAxisSizingMode: Optional[Literal["FIXED", "AUTO"]] = "AUTO"
     counterAxisSizingMode: Optional[Literal["FIXED", "AUTO"]] = "AUTO"
-    primaryAxisAlignItems: Optional[Literal["MIN", "CENTER", "MAX", "SPACE_BETWEEN"]] = "MIN"
+    primaryAxisAlignItems: Optional[
+        Literal["MIN", "CENTER", "MAX", "SPACE_BETWEEN"]
+    ] = "MIN"
     counterAxisAlignItems: Optional[Literal["MIN", "CENTER", "MAX", "BASELINE"]] = "MIN"
     counterAxisAlignContent: Optional[Literal["AUTO", "SPACE_BETWEEN"]] = "AUTO"
     #
@@ -79,10 +83,10 @@ class Frame(Node):
     #
     layoutPositioning: Optional[Literal["AUTO", "ABSOLUTE"]] = "AUTO"
     #
-    itemReverseZIndex = Optional[bool] = False
-    strokesIncludedInLayout = Optional[bool] = False
-    layoutGrids = Optional[List[LayoutGrid]] = []
-    overflowDirection = Optional[
+    itemReverseZIndex: Optional[bool] = False
+    strokesIncludedInLayout: Optional[bool] = False
+    layoutGrids: Optional[List[LayoutGrid]] = []
+    overflowDirection: Optional[
         Literal[
             "NONE",
             "HORIZONTAL_SCROLLING",
@@ -91,10 +95,10 @@ class Frame(Node):
         ]
     ] = "NONE"
 
-    effects: Optional[Effect] = None
+    effects: Optional[List[Effect]] = []
     isMask: Optional[bool] = False
     isMaskOutline: Optional[bool] = False
-    maskType = Optional[Literal["ALPHA", "VECTOR", "LUMINANCE"]]
-    styles = Optional[dict] = None
-    devStatus = Optional[DevStatus] = None
-    annotations = Optional[List[Annotation]] = []
+    maskType: Optional[Literal["ALPHA", "VECTOR", "LUMINANCE"]] = None
+    styles: Optional[dict] = None
+    devStatus: Optional[DevStatus] = None
+    annotations: Optional[List[Annotation]] = []

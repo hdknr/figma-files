@@ -15,9 +15,13 @@ from .slice import Slice  # NOQA
 from .text import Text  # NOQA
 from .vector import Vector  # NOQA
 from .washi import WashiTape  # NOQA
+import re
+import inspect
 
-import stringcase
+
+def to_snake(src: str) -> str:
+    return re.sub(r"(?<!^)(?=[A-Z])", "_", src).upper()
 
 
-for i in globals():
-    print(i)
+target = list(filter(lambda i: inspect.isclass(i[1]) and issubclass(i[1], Node), globals().items()))
+mapper = dict(map(lambda i: (to_snake(i[0]), i[1]), target))
