@@ -83,7 +83,18 @@ def walk_frame(elm, node):
             print(f"{e}")
 
         for child in children:
-            walk_frame(elm, child)
+
+def get_meta():
+    return [
+        {"charset": "utf-8"},
+        {"name": "viewport", "content": "width=device-width, initial-scale=1.0"},
+    ]
+
+
+def create_meta(head, meta):
+    return etree.SubElement(head, "meta", attrib=meta)
+
+
 
 
 @group.command()
@@ -96,6 +107,8 @@ def to_html(ctx, path, frame_name):
 
     html = etree.Element("html")
     body = etree.SubElement(html, "body")
+    list(map(partial(create_meta, head), get_meta()))
+    add_tailwind(head)
 
     document_path = Path(path) / "document.json"
     document = json.load(open(document_path))["document"]
