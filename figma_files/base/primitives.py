@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Literal, Optional, List
+from cssutils.css import CSSStyleRule
 
 
 class Size(BaseModel):
@@ -260,6 +261,10 @@ class TypeStyle(BaseModel):
     isOverrideOverTextStyle: Optional[bool] = None
     semanticWeight: Optional[Literal["BOLD", "NORMAL"]] = None
     semanticItalic: Optional[Literal["ITALIC", "NORMAL"]] = None
+
+    def set_rule(self, rule: CSSStyleRule):
+        if self.fontFamily:
+            rule.style.setProperty("font-family", self.fontFamily)
 
 
 class Overrides(BaseModel):
