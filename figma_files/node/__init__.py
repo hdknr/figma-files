@@ -15,12 +15,8 @@ from .slice import Slice  # NOQA
 from .text import Text  # NOQA
 from .vector import Vector  # NOQA
 from .washi import WashiTape  # NOQA
-import re
+from .utils import to_snake
 import inspect
-
-
-def to_snake(src: str) -> str:
-    return re.sub(r"(?<!^)(?=[A-Z])", "_", src).upper()
 
 
 target = list(filter(lambda i: inspect.isclass(i[1]) and issubclass(i[1], Node), globals().items()))
