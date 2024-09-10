@@ -116,9 +116,11 @@ def to_html(ctx, path, frame_name):
     if not frame:
         print(f"{frame_name} というFRAMEがありません")
         return
-    walk_frame(body, frame)
+    doctype = "<!DOCTYPE html>"
 
-    html_string = etree.tostring(html, pretty_print=True, encoding="unicode")
+    html_string = etree.tostring(
+        html, pretty_print=True, encoding="unicode", doctype=doctype
+    )
     print(html_string)
 
 
