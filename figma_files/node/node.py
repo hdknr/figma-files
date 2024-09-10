@@ -14,6 +14,11 @@ class Node(BaseModel):
     rotation: Optional[float] = None
 
     @property
+    def sanitized_id(self):
+        sanitized = re.sub(r"[^A-Za-z0-9]", "_", self.id)
+        return sanitized
+
+    @property
     def html_attrs(self):
         return {
             "id": self.id,
