@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from typing import Optional
 from lxml import etree
 from .utils import to_snake
+import re
 
 
 class Node(BaseModel):
@@ -21,11 +22,11 @@ class Node(BaseModel):
     @property
     def html_attrs(self):
         return {
-            "id": self.id,
+            "id": self.sanitized_id,
             "name": self.name,
-            "figma_type": to_snake(self.__class__.__name__),
+            "data-figma_type": to_snake(self.__class__.__name__),
         }
 
-    def to_element(self, parent, tag="div"):
+    def to_element(self, parent, sheet, tag="div"):
         elm: etree._Element = etree.SubElement(parent, tag, attrib=self.html_attrs)
         return elm
