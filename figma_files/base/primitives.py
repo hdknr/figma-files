@@ -122,13 +122,13 @@ class Paint(BaseModel):
     blendMode: Optional[BlendMode] = None
     gradientHandlePositions: Optional[list[Vector]] = []
     gradientStops: Optional[list[ColorStop]] = []
-    scaleMode: Literal["FILL", "FIT", "TILE", "STRETCH"]
+    scaleMode: Optional[Literal["FILL", "FIT", "TILE", "STRETCH"]] = None
     imageTransform: Optional[Transform] = []
-    scalingFactor: float
-    rotation: float
-    imageRef: str
+    scalingFactor: Optional[float] = None
+    rotation: Optional[float] = None
+    imageRef: Optional[str] = 0
     filters: Optional[ImageFilters] = None
-    gifRef: str
+    gifRef: Optional[str] = None
     boundVariables: Optional[dict] = None
 
 
@@ -154,8 +154,8 @@ class LayoutGrid(BaseModel):
 
 class Effect(BaseModel):
     type: Literal["INNER_SHADOW", "DROP_SHADOW", "LAYER_BLUR", "BACKGROUND_BLUR"]
-    visible: bool
-    radius: float
+    visible: Optional[bool] = None
+    radius: Optional[float] = None
     color: Optional[Color] = None
     blendMode: Optional[BlendMode] = None
     offset: Optional[Vector] = None
@@ -222,9 +222,9 @@ class TypeStyle(BaseModel):
     paragraphSpacing: Optional[float] = 0
     paragraphIndent: Optional[float] = 0
     listSpacing: Optional[float] = 0
-    italic: bool
-    fontWeight: float
-    fontSize: float
+    italic: Optional[bool] = None
+    fontWeight: Optional[float] = None
+    fontSize: Optional[float] = None
     textCase: Optional[Literal["ORIGINAL", "UPPER", "LOWER", "TITLE", "SMALL_CAPS", "SMALL_CAPS_FORCED"]] = "ORIGINAL"
     textDecoration: Optional[
         Literal[
@@ -249,17 +249,17 @@ class TypeStyle(BaseModel):
             "BOTTOM",
         ]
     ] = None
-    letterSpacing: float
+    letterSpacing: Optional[float] = None
     fills: Optional[List[Paint]] = []
-    hyperlink: Optional[Hyperlink]
+    hyperlink: Optional[Hyperlink] = None
     opentypeFlags: Optional[dict] = {}
-    lineHeightPx: float
+    lineHeightPx: Optional[float] = None
     lineHeightPercent: Optional[float] = 100
-    lineHeightPercentFontSize: float
-    lineHeightUnit: Optional[Literal["PIXELS", "FONT_SIZE_%", "INTRINSIC_%"]]
-    isOverrideOverTextStyle: bool
-    semanticWeight: Optional[Literal["BOLD", "NORMAL"]]
-    semanticItalic: Optional[Literal["ITALIC", "NORMAL"]]
+    lineHeightPercentFontSize: Optional[float] = None
+    lineHeightUnit: Optional[Literal["PIXELS", "FONT_SIZE_%", "INTRINSIC_%"]] = None
+    isOverrideOverTextStyle: Optional[bool] = None
+    semanticWeight: Optional[Literal["BOLD", "NORMAL"]] = None
+    semanticItalic: Optional[Literal["ITALIC", "NORMAL"]] = None
 
 
 class Overrides(BaseModel):

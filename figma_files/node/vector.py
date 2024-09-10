@@ -18,9 +18,7 @@ class Vector(Node):
     exportSettings: Optional[list[ExportSetting]] = []
     blendMode: BlendMode
     preserveRatio: Optional[bool] = False
-    layoutAlign: Optional[
-        Literal["INHERIT", "STRETCH", "MIN", "CENTER", "MAX", "STRETCH"]
-    ] = None
+    layoutAlign: Optional[Literal["INHERIT", "STRETCH", "MIN", "CENTER", "MAX", "STRETCH"]] = None
 
     layoutGrow: Optional[float] = 0
     constraints: Optional[LayoutConstraint] = None
