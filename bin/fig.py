@@ -7,6 +7,7 @@ from figma_files import rest
 import json
 import requests
 import mimetypes
+from figma_files.node import mapper
 
 
 @click.group()
@@ -54,6 +55,58 @@ def get_doc(ctx, file_key, output):
                     f.write(response.content)
 
         list(map(_download, images["meta"]["images"].items()))
+
+
+def find_node(document, type, name):
+    if isinstance(document, dict) and "type" in document and "name" in document:
+        if document["type"] == type and document["name"] == name:
+            return document
+        if "children" in document:
+            for child in document["children"]:
+                node = find_node(child, type, name)
+                if node:
+                    return node
+
+
+def walk_frame(elm, node):
+    if isinstance(node, dict) and "type" in node and "name" in node:
+        klass = mapper.get(node["type"], None)
+        if not klass:
+            print(f"{node['type']} is invalid node")
+            return
+
+        children = node.get("children", [])
+        try:
+            instance = klass(**node)
+            elm = instance.to_element(elm)
+        except Exception as e:
+            print(f"{e}")
+
+        for child in children:
+            walk_frame(elm, child)
+
+
+@group.command()
+@click.argument("path")
+@click.argument("frame_name")
+@click.pass_context
+def to_html(ctx, path, frame_name):
+    """HTML 変換"""
+    from lxml import etree
+
+    html = etree.Element("html")
+    body = etree.SubElement(html, "body")
+
+    document_path = Path(path) / "document.json"
+    document = json.load(open(document_path))["document"]
+    frame = find_node(document, "FRAME", frame_name)
+    if not frame:
+        print(f"{frame_name} というFRAMEがありません")
+        return
+    walk_frame(body, frame)
+
+    html_string = etree.tostring(html, pretty_print=True, encoding="unicode")
+    print(html_string)
 
 
 if __name__ == "__main__":
