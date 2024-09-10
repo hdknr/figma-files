@@ -8,6 +8,9 @@ import json
 import requests
 import mimetypes
 from figma_files.node import mapper
+from lxml import etree
+from cssutils.css import CSSStyleSheet
+from functools import partial
 
 
 @click.group()
@@ -68,7 +71,7 @@ def find_node(document, type, name):
                     return node
 
 
-def walk_frame(elm, node):
+def walk_frame(elm, sheet, node):
     if isinstance(node, dict) and "type" in node and "name" in node:
         klass = mapper.get(node["type"], None)
         if not klass:
@@ -78,11 +81,13 @@ def walk_frame(elm, node):
         children = node.get("children", [])
         try:
             instance = klass(**node)
-            elm = instance.to_element(elm)
+            elm = instance.to_element(elm, sheet)
         except Exception as e:
             print(f"{e}")
 
         for child in children:
+            walk_frame(elm, sheet, child)
+
 
 def get_meta():
     return [
@@ -95,6 +100,12 @@ def create_meta(head, meta):
     return etree.SubElement(head, "meta", attrib=meta)
 
 
+def add_tailwind(head):
+    elm = etree.SubElement(
+        head, "script", attrib={"src": "https://cdn.tailwindcss.com"}
+    )
+    elm.text = ""
+    return elm
 
 
 @group.command()
@@ -103,10 +114,12 @@ def create_meta(head, meta):
 @click.pass_context
 def to_html(ctx, path, frame_name):
     """HTML 変換"""
-    from lxml import etree
 
+    sheet = CSSStyleSheet()
     html = etree.Element("html")
+    head = etree.SubElement(html, "head")
     body = etree.SubElement(html, "body")
+
     list(map(partial(create_meta, head), get_meta()))
     add_tailwind(head)
 
@@ -116,6 +129,13 @@ def to_html(ctx, path, frame_name):
     if not frame:
         print(f"{frame_name} というFRAMEがありません")
         return
+    walk_frame(body, sheet, frame)
+
+    css_code = sheet.cssText.decode("utf-8")
+
+    e = etree.SubElement(head, "style")
+    e.text = css_code
+
     doctype = "<!DOCTYPE html>"
 
     html_string = etree.tostring(
