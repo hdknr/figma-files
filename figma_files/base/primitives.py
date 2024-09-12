@@ -138,7 +138,9 @@ class LayoutConstraint(BaseModel):
     horizontal: Literal["LEFT", "RIGHT", "CENTER", "LEFT_RIGHT", "SCALE"]
 
 
-EasingType = Literal["EASE_IN", "EASE_OUT", "EASE_IN_AND_OUT", "LINEAR", "GENTLE_SPRING"]
+EasingType = Literal[
+    "EASE_IN", "EASE_OUT", "EASE_IN_AND_OUT", "LINEAR", "GENTLE_SPRING"
+]
 
 
 class LayoutGrid(BaseModel):
@@ -226,7 +228,11 @@ class TypeStyle(BaseModel):
     italic: Optional[bool] = None
     fontWeight: Optional[float] = None
     fontSize: Optional[float] = None
-    textCase: Optional[Literal["ORIGINAL", "UPPER", "LOWER", "TITLE", "SMALL_CAPS", "SMALL_CAPS_FORCED"]] = "ORIGINAL"
+    textCase: Optional[
+        Literal[
+            "ORIGINAL", "UPPER", "LOWER", "TITLE", "SMALL_CAPS", "SMALL_CAPS_FORCED"
+        ]
+    ] = "ORIGINAL"
     textDecoration: Optional[
         Literal[
             "NONE",
@@ -234,7 +240,9 @@ class TypeStyle(BaseModel):
             "UNDERLINE",
         ]
     ] = "NONE"
-    textAutoResize: Optional[Literal["NONE", "HEIGHT", "WIDTH_AND_HEIGHT", "WIDTH_AND_HEIGHT"]] = "NONE"
+    textAutoResize: Optional[
+        Literal["NONE", "HEIGHT", "WIDTH_AND_HEIGHT", "WIDTH_AND_HEIGHT"]
+    ] = "NONE"
     textTruncation: Optional[
         Literal[
             "DISABLED",
@@ -242,7 +250,9 @@ class TypeStyle(BaseModel):
         ]
     ] = "DISABLED"
     maxLines: Optional[float] = None
-    textAlignHorizontal: Optional[Literal["LEFT", "RIGHT", "CENTER", "JUSTIFIED"]] = None
+    textAlignHorizontal: Optional[Literal["LEFT", "RIGHT", "CENTER", "JUSTIFIED"]] = (
+        None
+    )
     textAlignVertical: Optional[
         Literal[
             "TOP",
@@ -270,3 +280,25 @@ class TypeStyle(BaseModel):
 class Overrides(BaseModel):
     id: str
     overriddenFields: Optional[List[str]] = []
+
+
+class DocumentationLink(BaseModel):
+    uri: str  # Should be a valid URI (e.g. https://www.figma.com).
+
+
+class Component(BaseModel):
+    key: str  #  The key of the component
+    name: str  # The name of the component
+    description: str  # The description of the component as entered in the editor
+
+    # The ID of the component set if the component belongs to one
+    componentSetId: Optional[str] = None
+    # The documentation links for this component.
+    documentationLinks: Optional[List[DocumentationLink]] = []
+
+    # Whether this component is a remote component that doesn't live in this file
+    remote: bool
+
+
+class ComponentSet(Component):
+    pass
