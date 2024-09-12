@@ -30,6 +30,6 @@ class Text(Vector):
 
     def to_element(self, parent, sheet, tag="p"):
         elm: etree._Element = etree.SubElement(parent, tag, attrib=self.html_attrs)
-        elm.text = self.name
+        elm.text = self.characters
         # self.css(sheet, tag)
         return elm
