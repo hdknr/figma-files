@@ -27,7 +27,7 @@ def group(ctx):
 def get_doc(ctx, file_key, output):
     """ドキュメント取得"""
     output = output or f"/tmp/{file_key}"
-    Path(output).mkdir(exist_ok=True)
+    Path(output).mkdir(exist_ok=True, parents=True)
 
     document, images = None, None
     response = rest.get_file(file_key, os.getenv("TOKEN"))
@@ -101,32 +101,22 @@ def create_meta(head, meta):
 
 
 def add_tailwind(head):
-    elm = etree.SubElement(head, "script", attrib={"src": "https://cdn.tailwindcss.com"})
+    elm = etree.SubElement(
+        head, "script", attrib={"src": "https://cdn.tailwindcss.com"}
+    )
     elm.text = ""
     return elm
 
 
-@group.command()
-@click.argument("path")
-@click.argument("frame_name")
-@click.pass_context
-def to_html(ctx, path, frame_name):
-    """HTML 変換"""
+def frame_to_html(output: Path, name: str, frame: dict):
+    html_path: Path = output / f"{name}.{frame['name']}.html"
+    html_path.parent.mkdir(exist_ok=True, parents=True)
 
     sheet = CSSStyleSheet()
     html = etree.Element("html")
     head = etree.SubElement(html, "head")
     body = etree.SubElement(html, "body")
 
-    list(map(partial(create_meta, head), get_meta()))
-    add_tailwind(head)
-
-    document_path = Path(path) / "document.json"
-    document = json.load(open(document_path))["document"]
-    frame = find_node(document, "FRAME", frame_name)
-    if not frame:
-        print(f"{frame_name} というFRAMEがありません")
-        return
     walk_frame(body, sheet, frame)
 
     css_code = sheet.cssText.decode("utf-8")
@@ -136,9 +126,29 @@ def to_html(ctx, path, frame_name):
 
     doctype = "<!DOCTYPE html>"
 
-    html_string = etree.tostring(html, pretty_print=True, encoding="unicode", doctype=doctype)
-    print(html_string)
+    html_string = etree.tostring(
+        html, pretty_print=True, encoding="unicode", doctype=doctype
+    )
+    with open(html_path, "w") as out:
+        out.write(html_string)
 
 
-if __name__ == "__main__":
-    group()
+def canvas_to_html(output: Path, canvas: dict):
+    name = canvas["name"]
+    if name[0] == "/":
+        name = name[1:]
+
+    list(map(partial(frame_to_html, output, name), canvas["children"]))
+
+
+@group.command()
+@click.argument("path")
+@click.pass_context
+def to_html(ctx, path):
+    dst = Path(path) / "html"
+    dst.mkdir(exist_ok=True, parents=True)
+
+    document_path = Path(path) / "document.json"
+    document = json.load(open(document_path))["document"]
+    canvas_set = document.pop("children")
+    list(map(partial(canvas_to_html, dst), canvas_set))
