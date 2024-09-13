@@ -1,5 +1,5 @@
 from .node import Node
-from ..base.primitives import Color, FlowStartingPoint, ExportSetting, Measurement
+from ..base.property_types import Color, FlowStartingPoint, ExportSetting, Measurement
 from typing import Optional
 
 

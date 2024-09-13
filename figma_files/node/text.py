@@ -1,5 +1,5 @@
 from .vector import Vector
-from ..base.primitives import TypeStyle
+from ..base.property_types import TypeStyle
 from typing import Optional, List, Literal
 from lxml import etree
 from cssutils.css import CSSStyleRule as Rule

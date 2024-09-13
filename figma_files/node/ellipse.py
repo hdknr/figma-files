@@ -1,5 +1,5 @@
 from .vector import Vector
-from ..base.primitives import ArcData
+from ..base.property_types import ArcData
 
 
 class Ellipse(Vector):

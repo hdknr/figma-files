@@ -1,6 +1,6 @@
 from .frame import Frame
 from typing import Optional, List
-from ..base.primitives import Overrides
+from ..base.property_types import Overrides
 
 
 class Instance(Frame):
