@@ -22,9 +22,10 @@ def group(ctx):
 
 @group.command()
 @click.argument("file_key")
+@click.option("--no_image", "-ni", is_flag=True)
 @click.option("--output", "-o", default=None)
 @click.pass_context
-def get_doc(ctx, file_key, output):
+def get_doc(ctx, file_key, no_image, output):
     """ドキュメント取得"""
     output = output or f"/tmp/{file_key}"
     Path(output).mkdir(exist_ok=True, parents=True)
@@ -38,7 +39,7 @@ def get_doc(ctx, file_key, output):
             json.dump(document, out, indent=2, ensure_ascii=False)
 
     response = rest.get_images(file_key, os.getenv("TOKEN"))
-    if response.status_code == 200:
+    if response.status_code == 200 and not no_image:
         path = Path(output) / "images.json"
         images = response.json()
         with open(path, "w") as out:
@@ -115,6 +116,7 @@ def frame_to_html(output: Path, name: str, frame: dict):
     sheet = CSSStyleSheet()
     html = etree.Element("html")
     head = etree.SubElement(html, "head")
+    add_tailwind(head)
     body = etree.SubElement(html, "body")
 
     walk_frame(body, sheet, frame)
@@ -135,9 +137,11 @@ def frame_to_html(output: Path, name: str, frame: dict):
 
 def canvas_to_html(output: Path, canvas: dict):
     name = canvas["name"]
-    if name[0] == "/":
-        name = name[1:]
+    if not name[0] == "/":
+        # / で始まらないページはテンプレートと判断する
+        return
 
+    name = name[1:]
     list(map(partial(frame_to_html, output, name), canvas["children"]))
 
 
