@@ -101,9 +101,7 @@ def create_meta(head, meta):
 
 
 def add_tailwind(head):
-    elm = etree.SubElement(
-        head, "script", attrib={"src": "https://cdn.tailwindcss.com"}
-    )
+    elm = etree.SubElement(head, "script", attrib={"src": "https://cdn.tailwindcss.com"})
     elm.text = ""
     return elm
 
@@ -138,9 +136,7 @@ def to_html(ctx, path, frame_name):
 
     doctype = "<!DOCTYPE html>"
 
-    html_string = etree.tostring(
-        html, pretty_print=True, encoding="unicode", doctype=doctype
-    )
+    html_string = etree.tostring(html, pretty_print=True, encoding="unicode", doctype=doctype)
     print(html_string)
 
 
