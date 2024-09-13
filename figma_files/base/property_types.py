@@ -141,9 +141,7 @@ class LayoutConstraint(BaseModel):
     horizontal: Literal["LEFT", "RIGHT", "CENTER", "LEFT_RIGHT", "SCALE"]
 
 
-EasingType = Literal[
-    "EASE_IN", "EASE_OUT", "EASE_IN_AND_OUT", "LINEAR", "GENTLE_SPRING"
-]
+EasingType = Literal["EASE_IN", "EASE_OUT", "EASE_IN_AND_OUT", "LINEAR", "GENTLE_SPRING"]
 
 
 class LayoutGrid(BaseModel):
@@ -224,18 +222,14 @@ class Hyperlink(BaseModel):
 
 class TypeStyle(BaseModel):
     fontFamily: str
-    fontPostScriptName: str
+    fontPostScriptName: Optional[str] = None
     paragraphSpacing: Optional[float] = 0
     paragraphIndent: Optional[float] = 0
     listSpacing: Optional[float] = 0
     italic: Optional[bool] = None
     fontWeight: Optional[float] = None
     fontSize: Optional[float] = None
-    textCase: Optional[
-        Literal[
-            "ORIGINAL", "UPPER", "LOWER", "TITLE", "SMALL_CAPS", "SMALL_CAPS_FORCED"
-        ]
-    ] = "ORIGINAL"
+    textCase: Optional[Literal["ORIGINAL", "UPPER", "LOWER", "TITLE", "SMALL_CAPS", "SMALL_CAPS_FORCED"]] = "ORIGINAL"
     textDecoration: Optional[
         Literal[
             "NONE",
@@ -243,9 +237,7 @@ class TypeStyle(BaseModel):
             "UNDERLINE",
         ]
     ] = "NONE"
-    textAutoResize: Optional[
-        Literal["NONE", "HEIGHT", "WIDTH_AND_HEIGHT", "WIDTH_AND_HEIGHT"]
-    ] = "NONE"
+    textAutoResize: Optional[Literal["NONE", "HEIGHT", "WIDTH_AND_HEIGHT", "WIDTH_AND_HEIGHT"]] = "NONE"
     textTruncation: Optional[
         Literal[
             "DISABLED",
@@ -253,9 +245,7 @@ class TypeStyle(BaseModel):
         ]
     ] = "DISABLED"
     maxLines: Optional[float] = None
-    textAlignHorizontal: Optional[Literal["LEFT", "RIGHT", "CENTER", "JUSTIFIED"]] = (
-        None
-    )
+    textAlignHorizontal: Optional[Literal["LEFT", "RIGHT", "CENTER", "JUSTIFIED"]] = None
     textAlignVertical: Optional[
         Literal[
             "TOP",
