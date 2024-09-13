@@ -1,4 +1,5 @@
 from .node import Node
+from ..base.files import FigmaFile
 from ..base.property_types import (
     Paint,
     Color,
@@ -37,9 +38,7 @@ class Frame(Node):
     blendMode: BlendMode
     preserveRatio: Optional[bool] = False
     constraints: Optional[LayoutConstraint] = None
-    layoutAlign: Optional[
-        Literal["INHERIT", "STRETCH", "MIN", "CENTER", "MAX", "STRETCH"]
-    ] = None
+    layoutAlign: Optional[Literal["INHERIT", "STRETCH", "MIN", "CENTER", "MAX", "STRETCH"]] = None
     #
     transitionNodeID: Optional[str] = None
     transitionDuration: Optional[float] = None
@@ -65,9 +64,7 @@ class Frame(Node):
     layoutWrap: Optional[Literal["NO_WRAP", "WRAP"]] = "NO_WRAP"
     primaryAxisSizingMode: Optional[Literal["FIXED", "AUTO"]] = "AUTO"
     counterAxisSizingMode: Optional[Literal["FIXED", "AUTO"]] = "AUTO"
-    primaryAxisAlignItems: Optional[
-        Literal["MIN", "CENTER", "MAX", "SPACE_BETWEEN"]
-    ] = "MIN"
+    primaryAxisAlignItems: Optional[Literal["MIN", "CENTER", "MAX", "SPACE_BETWEEN"]] = "MIN"
     counterAxisAlignItems: Optional[Literal["MIN", "CENTER", "MAX", "BASELINE"]] = "MIN"
     counterAxisAlignContent: Optional[Literal["AUTO", "SPACE_BETWEEN"]] = "AUTO"
     #
@@ -104,7 +101,7 @@ class Frame(Node):
     devStatus: Optional[DevStatus] = None
     annotations: Optional[List[Annotation]] = []
 
-    def to_element(self, parent, sheet, tag="div"):
+    def to_element(self, parent, sheet, file: FigmaFile, tag="div"):
         if parent.tag == "body":
             tag = "section"
         else:
@@ -113,5 +110,27 @@ class Frame(Node):
             if names[0] in ["section", "header", "nav", "aside", "main", "footer"]:
                 tag = names[0]
 
-        elm: etree._Element = etree.SubElement(parent, tag, attrib=self.html_attrs)
+        classes = []
+
+        # flex
+        if self.layoutPositioning == "AUTO":
+            classes.append("flex")
+
+        # flex
+        if "class" in parent.attrib and "flex" in parent.attrib["class"].split(" "):
+            classes.append("flex-auto")
+
+        # 背景色
+        if self.styles and "fill" in self.styles:
+            style = file.styles.get(self.styles["fill"], None)
+            if style:
+                prefix, color, grade = style.name.split("/")
+                bg = f"bg-{color}-{grade}"
+                classes.append(bg)
+
+        attrs = self.html_attrs
+        if classes:
+            attrs["class"] = " ".join(classes)
+
+        elm: etree._Element = etree.SubElement(parent, tag, attrib=attrs)
         return elm
