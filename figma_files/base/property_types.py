@@ -1,3 +1,6 @@
+# Property Type
+# https://www.figma.com/developers/api#files-types
+
 from pydantic import BaseModel
 from typing import Literal, Optional, List
 from cssutils.css import CSSStyleRule
@@ -302,3 +305,13 @@ class Component(BaseModel):
 
 class ComponentSet(Component):
     pass
+
+
+class Style(Component):
+    # https://www.figma.com/developers/api#files-types
+    key: str  # The key of the style
+    name: str  # The name of the style
+    description: str  # The description of the style
+    # Whether this style is a remote style that doesn't live in this file
+    remote: bool
+    styleType: Literal["FILL", "TEXT", "EFFECT", "GRID"]
