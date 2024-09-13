@@ -290,7 +290,7 @@ class Component(BaseModel):
     documentationLinks: Optional[List[DocumentationLink]] = []
 
     # Whether this component is a remote component that doesn't live in this file
-    remote: bool
+    remote: Optional[bool] = None
 
 
 class ComponentSet(Component):
