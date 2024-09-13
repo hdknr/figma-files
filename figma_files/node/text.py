@@ -1,5 +1,6 @@
 from .vector import Vector
 from ..base.property_types import TypeStyle
+from ..base.files import FigmaFile
 from typing import Optional, List, Literal
 from lxml import etree
 from cssutils.css import CSSStyleRule as Rule
@@ -28,7 +29,7 @@ class Text(Vector):
         attrs.pop("name")
         return attrs
 
-    def to_element(self, parent, sheet, tag="p"):
+    def to_element(self, parent, sheet, file: FigmaFile, tag="p"):
         elm: etree._Element = etree.SubElement(parent, tag, attrib=self.html_attrs)
         elm.text = self.characters
         # self.css(sheet, tag)
