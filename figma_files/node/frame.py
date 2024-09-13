@@ -15,6 +15,7 @@ from ..base.property_types import (
     EasingType,
 )
 from typing import Optional, List, Literal
+from lxml import etree
 
 
 class Frame(Node):
@@ -36,7 +37,9 @@ class Frame(Node):
     blendMode: BlendMode
     preserveRatio: Optional[bool] = False
     constraints: Optional[LayoutConstraint] = None
-    layoutAlign: Optional[Literal["INHERIT", "STRETCH", "MIN", "CENTER", "MAX", "STRETCH"]] = None
+    layoutAlign: Optional[
+        Literal["INHERIT", "STRETCH", "MIN", "CENTER", "MAX", "STRETCH"]
+    ] = None
     #
     transitionNodeID: Optional[str] = None
     transitionDuration: Optional[float] = None
@@ -62,7 +65,9 @@ class Frame(Node):
     layoutWrap: Optional[Literal["NO_WRAP", "WRAP"]] = "NO_WRAP"
     primaryAxisSizingMode: Optional[Literal["FIXED", "AUTO"]] = "AUTO"
     counterAxisSizingMode: Optional[Literal["FIXED", "AUTO"]] = "AUTO"
-    primaryAxisAlignItems: Optional[Literal["MIN", "CENTER", "MAX", "SPACE_BETWEEN"]] = "MIN"
+    primaryAxisAlignItems: Optional[
+        Literal["MIN", "CENTER", "MAX", "SPACE_BETWEEN"]
+    ] = "MIN"
     counterAxisAlignItems: Optional[Literal["MIN", "CENTER", "MAX", "BASELINE"]] = "MIN"
     counterAxisAlignContent: Optional[Literal["AUTO", "SPACE_BETWEEN"]] = "AUTO"
     #
@@ -98,3 +103,15 @@ class Frame(Node):
     styles: Optional[dict] = None
     devStatus: Optional[DevStatus] = None
     annotations: Optional[List[Annotation]] = []
+
+    def to_element(self, parent, sheet, tag="div"):
+        if parent.tag == "body":
+            tag = "section"
+        else:
+            names = self.name.split("_")
+            # semantic structure
+            if names[0] in ["section", "header", "nav", "aside", "main", "footer"]:
+                tag = names[0]
+
+        elm: etree._Element = etree.SubElement(parent, tag, attrib=self.html_attrs)
+        return elm
