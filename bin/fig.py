@@ -8,6 +8,7 @@ import json
 import requests
 import mimetypes
 from figma_files.node import mapper
+from figma_files.base.files import FigmaFile
 from lxml import etree
 from cssutils.css import CSSStyleSheet
 from functools import partial
@@ -72,7 +73,7 @@ def find_node(document, type, name):
                     return node
 
 
-def walk_frame(elm, sheet, node):
+def walk_frame(elm, sheet, file: FigmaFile, node):
     if isinstance(node, dict) and "type" in node and "name" in node:
         klass = mapper.get(node["type"], None)
         if not klass:
@@ -82,12 +83,12 @@ def walk_frame(elm, sheet, node):
         children = node.get("children", [])
         try:
             instance = klass(**node)
-            elm = instance.to_element(elm, sheet)
+            elm = instance.to_element(elm, sheet, file)
         except Exception as e:
-            print(f"{e}")
+            print(f"-----{e}")
 
         for child in children:
-            walk_frame(elm, sheet, child)
+            walk_frame(elm, sheet, file, child)
 
 
 def get_meta():
@@ -102,14 +103,12 @@ def create_meta(head, meta):
 
 
 def add_tailwind(head):
-    elm = etree.SubElement(
-        head, "script", attrib={"src": "https://cdn.tailwindcss.com"}
-    )
+    elm = etree.SubElement(head, "script", attrib={"src": "https://cdn.tailwindcss.com"})
     elm.text = ""
     return elm
 
 
-def frame_to_html(output: Path, name: str, frame: dict):
+def frame_to_html(file: FigmaFile, output: Path, name: str, frame: dict):
     html_path: Path = output / f"{name}.{frame['name']}.html"
     html_path.parent.mkdir(exist_ok=True, parents=True)
 
@@ -119,7 +118,7 @@ def frame_to_html(output: Path, name: str, frame: dict):
     add_tailwind(head)
     body = etree.SubElement(html, "body")
 
-    walk_frame(body, sheet, frame)
+    walk_frame(body, sheet, file, frame)
 
     css_code = sheet.cssText.decode("utf-8")
 
@@ -128,21 +127,19 @@ def frame_to_html(output: Path, name: str, frame: dict):
 
     doctype = "<!DOCTYPE html>"
 
-    html_string = etree.tostring(
-        html, pretty_print=True, encoding="unicode", doctype=doctype
-    )
+    html_string = etree.tostring(html, pretty_print=True, encoding="unicode", doctype=doctype)
     with open(html_path, "w") as out:
         out.write(html_string)
 
 
-def canvas_to_html(output: Path, canvas: dict):
+def canvas_to_html(file: FigmaFile, output: Path, canvas: dict):
     name = canvas["name"]
     if not name[0] == "/":
         # / で始まらないページはテンプレートと判断する
         return
 
     name = name[1:]
-    list(map(partial(frame_to_html, output, name), canvas["children"]))
+    list(map(partial(frame_to_html, file, output, name), canvas["children"]))
 
 
 @group.command()
@@ -153,9 +150,12 @@ def to_html(ctx, path):
     dst.mkdir(exist_ok=True, parents=True)
 
     document_path = Path(path) / "document.json"
-    document = json.load(open(document_path))["document"]
-    canvas_set = document.pop("children")
-    list(map(partial(canvas_to_html, dst), canvas_set))
+    figma = json.load(open(document_path))
+    # document = figma["document"]
+    figma_file = FigmaFile(**figma)
+
+    canvas_set = figma_file.document["children"]
+    list(map(partial(canvas_to_html, figma_file, dst), canvas_set))
 
 
 if __name__ == "__main__":
