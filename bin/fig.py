@@ -152,3 +152,7 @@ def to_html(ctx, path):
     document = json.load(open(document_path))["document"]
     canvas_set = document.pop("children")
     list(map(partial(canvas_to_html, dst), canvas_set))
+
+
+if __name__ == "__main__":
+    group()
