@@ -38,9 +38,7 @@ class Frame(Node):
     blendMode: BlendMode
     preserveRatio: Optional[bool] = False
     constraints: Optional[LayoutConstraint] = None
-    layoutAlign: Optional[
-        Literal["INHERIT", "STRETCH", "MIN", "CENTER", "MAX", "STRETCH"]
-    ] = None
+    layoutAlign: Optional[Literal["INHERIT", "STRETCH", "MIN", "CENTER", "MAX", "STRETCH"]] = None
     #
     transitionNodeID: Optional[str] = None
     transitionDuration: Optional[float] = None
@@ -66,9 +64,7 @@ class Frame(Node):
     layoutWrap: Optional[Literal["NO_WRAP", "WRAP"]] = "NO_WRAP"
     primaryAxisSizingMode: Optional[Literal["FIXED", "AUTO"]] = "AUTO"
     counterAxisSizingMode: Optional[Literal["FIXED", "AUTO"]] = "AUTO"
-    primaryAxisAlignItems: Optional[
-        Literal["MIN", "CENTER", "MAX", "SPACE_BETWEEN"]
-    ] = "MIN"
+    primaryAxisAlignItems: Optional[Literal["MIN", "CENTER", "MAX", "SPACE_BETWEEN"]] = "MIN"
     counterAxisAlignItems: Optional[Literal["MIN", "CENTER", "MAX", "BASELINE"]] = "MIN"
     counterAxisAlignContent: Optional[Literal["AUTO", "SPACE_BETWEEN"]] = "AUTO"
     #
@@ -116,12 +112,18 @@ class Frame(Node):
         if self.layoutSizingVertical == "FIXED":
             n = int(self.absoluteBoundingBox.height / 4)
             classes.append(f"h-{n}")
+            if n > 96:
+                rem = int(n / 4)
+                file.tailwind_config.set_extennd("height", f"{n}", f"{rem}rem")
         elif self.layoutSizingVertical == "FILL":
             classes.append("h-full")
 
         # 幅
         if self.layoutSizingHorizontal == "FIXED":
             n = int(self.absoluteBoundingBox.width / 4)
+            if n > 96:
+                rem = int(n / 4)
+                file.tailwind_config.set_extennd("width", f"{n}", f"{rem}rem")
             classes.append(f"w-{n}")
         elif self.layoutSizingHorizontal == "FILL":
             classes.append("w-full")
