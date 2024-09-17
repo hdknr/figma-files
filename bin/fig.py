@@ -12,6 +12,7 @@ from figma_files.base.files import FigmaFile
 from lxml import etree
 from cssutils.css import CSSStyleSheet
 from functools import partial
+from bs4 import BeautifulSoup as Soup
 
 
 @click.group()
@@ -84,7 +85,7 @@ def walk_frame(elm, sheet, file: FigmaFile, node):
         try:
             instance = klass(**node)
             elm = instance.to_element(elm, sheet, file)
-        except Exception as e:
+        except Exception:
             import traceback
 
             print(traceback.format_exc())
@@ -129,11 +130,20 @@ def frame_to_html(file: FigmaFile, output: Path, name: str, frame: dict):
     e = etree.SubElement(head, "style")
     e.text = css_code
 
+    tailwind_config = file.tailwind_config.json()
+    e = etree.SubElement(head, "script")
+    e.text = f"tailwind.config = JSON.parse('{tailwind_config}');"
+
     doctype = "<!DOCTYPE html>"
 
     html_string = etree.tostring(
-        html, pretty_print=True, encoding="unicode", doctype=doctype
+        html,
+        pretty_print=True,
+        encoding="unicode",
+        doctype=doctype,
+        method="html",  # self-closing tags を無効
     )
+    html_string = Soup(html_string, "html.parser").prettify()
     with open(html_path, "w") as out:
         out.write(html_string)
 
