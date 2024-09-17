@@ -38,7 +38,9 @@ class Frame(Node):
     blendMode: BlendMode
     preserveRatio: Optional[bool] = False
     constraints: Optional[LayoutConstraint] = None
-    layoutAlign: Optional[Literal["INHERIT", "STRETCH", "MIN", "CENTER", "MAX", "STRETCH"]] = None
+    layoutAlign: Optional[
+        Literal["INHERIT", "STRETCH", "MIN", "CENTER", "MAX", "STRETCH"]
+    ] = None
     #
     transitionNodeID: Optional[str] = None
     transitionDuration: Optional[float] = None
@@ -64,7 +66,9 @@ class Frame(Node):
     layoutWrap: Optional[Literal["NO_WRAP", "WRAP"]] = "NO_WRAP"
     primaryAxisSizingMode: Optional[Literal["FIXED", "AUTO"]] = "AUTO"
     counterAxisSizingMode: Optional[Literal["FIXED", "AUTO"]] = "AUTO"
-    primaryAxisAlignItems: Optional[Literal["MIN", "CENTER", "MAX", "SPACE_BETWEEN"]] = "MIN"
+    primaryAxisAlignItems: Optional[
+        Literal["MIN", "CENTER", "MAX", "SPACE_BETWEEN"]
+    ] = "MIN"
     counterAxisAlignItems: Optional[Literal["MIN", "CENTER", "MAX", "BASELINE"]] = "MIN"
     counterAxisAlignContent: Optional[Literal["AUTO", "SPACE_BETWEEN"]] = "AUTO"
     #
@@ -101,34 +105,57 @@ class Frame(Node):
     devStatus: Optional[DevStatus] = None
     annotations: Optional[List[Annotation]] = []
 
-    def to_element(self, parent, sheet, file: FigmaFile, tag="div"):
-        if parent.tag == "body":
-            tag = "section"
-        else:
-            names = self.name.split("_")
-            # semantic structure
-            if names[0] in ["section", "header", "nav", "aside", "main", "footer"]:
-                tag = names[0]
-
+    def tailwind_css(self, parent, file: FigmaFile):
         classes = []
 
-        # flex
+        # flex box
         if self.layoutPositioning == "AUTO":
             classes.append("flex")
 
-        # flex
-        if "class" in parent.attrib and "flex" in parent.attrib["class"].split(" "):
+        # 高さ
+        if self.layoutSizingVertical == "FIXED":
+            n = int(self.absoluteBoundingBox.height / 4)
+            classes.append(f"h-{n}")
+        elif self.layoutSizingVertical == "FILL":
+            classes.append("h-full")
+
+        # 幅
+        if self.layoutSizingHorizontal == "FIXED":
+            n = int(self.absoluteBoundingBox.width / 4)
+            classes.append(f"w-{n}")
+        elif self.layoutSizingHorizontal == "FILL":
+            classes.append("w-full")
+
+        if "h-full" in classes and "w-full" in classes:
+            # classes.append("grow")
             classes.append("flex-auto")
 
         # 背景色
         if self.styles and "fill" in self.styles:
             style = file.styles.get(self.styles["fill"], None)
             if style:
-                prefix, color, grade = style.name.split("/")
-                bg = f"bg-{color}-{grade}"
+                parts = style.name.split("/")
+                bg = "-".join(["bg"] + parts[1:])
                 classes.append(bg)
 
+        return classes
+
+    def to_element(self, parent, sheet, file: FigmaFile, tag="div"):
         attrs = self.html_attrs
+        classes = ["relative"]
+
+        # 構造タグ
+        if parent.tag == "body":
+            tag = "section"
+            classes += ["min-h-screen flex-col"]
+        else:
+            names = self.name.split("_")
+            # semantic structure
+            if names[0] in ["section", "header", "nav", "aside", "main", "footer"]:
+                tag = names[0]
+
+        # クラス
+        classes += self.tailwind_css(parent, file)
         if classes:
             attrs["class"] = " ".join(classes)
 

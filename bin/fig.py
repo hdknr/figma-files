@@ -85,7 +85,9 @@ def walk_frame(elm, sheet, file: FigmaFile, node):
             instance = klass(**node)
             elm = instance.to_element(elm, sheet, file)
         except Exception as e:
-            print(f"-----{e}")
+            import traceback
+
+            print(traceback.format_exc())
 
         for child in children:
             walk_frame(elm, sheet, file, child)
@@ -103,7 +105,9 @@ def create_meta(head, meta):
 
 
 def add_tailwind(head):
-    elm = etree.SubElement(head, "script", attrib={"src": "https://cdn.tailwindcss.com"})
+    elm = etree.SubElement(
+        head, "script", attrib={"src": "https://cdn.tailwindcss.com"}
+    )
     elm.text = ""
     return elm
 
@@ -127,7 +131,9 @@ def frame_to_html(file: FigmaFile, output: Path, name: str, frame: dict):
 
     doctype = "<!DOCTYPE html>"
 
-    html_string = etree.tostring(html, pretty_print=True, encoding="unicode", doctype=doctype)
+    html_string = etree.tostring(
+        html, pretty_print=True, encoding="unicode", doctype=doctype
+    )
     with open(html_path, "w") as out:
         out.write(html_string)
 
