@@ -30,16 +30,8 @@ class Instance(Frame):
             | self.tw_class_size(parent, file)
             | self.tw_class_background(parent, file)
             | self.tw_class_corner(parent, file)
+            | self.tw_class_align(parent, file)
         )
-
-        # アライン
-        if self.layoutMode == "HORIZONTAL":
-            # オートレイアウト
-            classes.add("flex")
-            if self.primaryAxisAlignItems == "CENTER":
-                classes.add("justify-center")
-            if self.counterAxisAlignItems == "CENTER":
-                classes.add("items-center")
 
         attrs = self.html_attrs
         if classes:

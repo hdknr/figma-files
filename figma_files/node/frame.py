@@ -79,10 +79,15 @@ class Frame(Node):
     # This property is only applicable for auto-layout frames.
     counterAxisSizingMode: Optional[Literal["FIXED", "AUTO"]] = "AUTO"
 
+    # MIN: 左揃え(HORIZONTAL), 上揃え(VERTICAL)
+    # MAX: 右揃え(HORIZONTAL), 下揃え(VERTICAL)
+    # SPACE_BETWEEN: 均等
+    # BASELINE: 下揃え (HORIZONTALの場合のみ)
     primaryAxisAlignItems: Optional[
         Literal["MIN", "CENTER", "MAX", "SPACE_BETWEEN"]
     ] = "MIN"
     counterAxisAlignItems: Optional[Literal["MIN", "CENTER", "MAX", "BASELINE"]] = "MIN"
+
     counterAxisAlignContent: Optional[Literal["AUTO", "SPACE_BETWEEN"]] = "AUTO"
     #
     paddingLeft: Optional[float] = 0
@@ -157,6 +162,33 @@ class Frame(Node):
                 classes.add(rounded)
         return classes
 
+    def tw_class_align(self, parent: etree._Element, file: FigmaFile) -> set:
+        """アライン"""
+        classes = set()
+
+        mp = {
+            "CENTER": "center",
+            "MIN": "start",
+            "MAX": "end",
+            "SPACE_BETWEEN": "between",
+            "BASELINE": "baseline",
+        }
+
+        if self.layoutMode == "HORIZONTAL":  # 水平方向オートレイアウト
+            classes.add("flex")  # オートレイアウト
+
+            # 水平方向
+            x = mp.get(self.primaryAxisAlignItems, None)
+            if x:
+                classes.add(f"justify-{x}")
+
+            # 垂直方向
+            y = mp.get(self.counterAxisAlignItems, None)
+            if y:
+                classes.add(f"items-{y}")
+
+        return classes
+
     def tailwind_css(self, parent, file: FigmaFile):
         classes = set()
 
@@ -165,6 +197,7 @@ class Frame(Node):
             classes
             | self.tw_class_size(parent, file)
             | self.tw_class_background(parent, file)
+            | self.tw_class_align(parent, file)
         )
 
         # flex box
