@@ -29,8 +29,26 @@ class Text(Vector):
         attrs.pop("name")
         return attrs
 
-    def to_element(self, parent, sheet, file: FigmaFile, tag="p"):
-        elm: etree._Element = etree.SubElement(parent, tag, attrib=self.html_attrs)
+    def to_element(self, parent: etree._Element, sheet, file: FigmaFile, tag="p"):
+        classes = []
+
+        if parent is None:
+            return
+
+        if parent.tag == "a":
+            tag = "span"
+
+        # フォントカラー
+        fill = self.styles and file.styles.get(self.styles.get("fill", None), None)
+        if fill:
+            color = file.tw_color("text", fill)
+            if color:
+                classes.append(color)
+
+        attrs = self.html_attrs
+        if classes:
+            attrs["class"] = " ".join(classes)
+
+        elm: etree._Element = etree.SubElement(parent, tag, attrib=attrs)
         elm.text = self.characters
-        # self.css(sheet, tag)
         return elm
