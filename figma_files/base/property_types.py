@@ -141,7 +141,9 @@ class LayoutConstraint(BaseModel):
     horizontal: Literal["LEFT", "RIGHT", "CENTER", "LEFT_RIGHT", "SCALE"]
 
 
-EasingType = Literal["EASE_IN", "EASE_OUT", "EASE_IN_AND_OUT", "LINEAR", "GENTLE_SPRING"]
+EasingType = Literal[
+    "EASE_IN", "EASE_OUT", "EASE_IN_AND_OUT", "LINEAR", "GENTLE_SPRING"
+]
 
 
 class LayoutGrid(BaseModel):
@@ -157,6 +159,10 @@ class LayoutGrid(BaseModel):
 
 
 class Effect(BaseModel):
+    """
+    A visual effect such as a shadow or blur
+    """
+
     type: Literal["INNER_SHADOW", "DROP_SHADOW", "LAYER_BLUR", "BACKGROUND_BLUR"]
     visible: Optional[bool] = None
     radius: Optional[float] = None
@@ -164,7 +170,10 @@ class Effect(BaseModel):
     blendMode: Optional[BlendMode] = None
     offset: Optional[Vector] = None
     spread: Optional[float] = 0
-    showShadowBehindNode: bool
+
+    # Boolean Whether to show the shadow behind translucent or transparent pixels (applies only to drop shadows)
+    showShadowBehindNode: Optional[bool] = None
+
     boundVariables: Optional[dict] = None
 
 
@@ -229,7 +238,11 @@ class TypeStyle(BaseModel):
     italic: Optional[bool] = None
     fontWeight: Optional[float] = None
     fontSize: Optional[float] = None
-    textCase: Optional[Literal["ORIGINAL", "UPPER", "LOWER", "TITLE", "SMALL_CAPS", "SMALL_CAPS_FORCED"]] = "ORIGINAL"
+    textCase: Optional[
+        Literal[
+            "ORIGINAL", "UPPER", "LOWER", "TITLE", "SMALL_CAPS", "SMALL_CAPS_FORCED"
+        ]
+    ] = "ORIGINAL"
     textDecoration: Optional[
         Literal[
             "NONE",
@@ -237,7 +250,9 @@ class TypeStyle(BaseModel):
             "UNDERLINE",
         ]
     ] = "NONE"
-    textAutoResize: Optional[Literal["NONE", "HEIGHT", "WIDTH_AND_HEIGHT", "WIDTH_AND_HEIGHT"]] = "NONE"
+    textAutoResize: Optional[
+        Literal["NONE", "HEIGHT", "WIDTH_AND_HEIGHT", "WIDTH_AND_HEIGHT"]
+    ] = "NONE"
     textTruncation: Optional[
         Literal[
             "DISABLED",
@@ -245,7 +260,9 @@ class TypeStyle(BaseModel):
         ]
     ] = "DISABLED"
     maxLines: Optional[float] = None
-    textAlignHorizontal: Optional[Literal["LEFT", "RIGHT", "CENTER", "JUSTIFIED"]] = None
+    textAlignHorizontal: Optional[Literal["LEFT", "RIGHT", "CENTER", "JUSTIFIED"]] = (
+        None
+    )
     textAlignVertical: Optional[
         Literal[
             "TOP",
@@ -271,8 +288,13 @@ class TypeStyle(BaseModel):
 
 
 class Overrides(BaseModel):
-    id: str
-    overriddenFields: Optional[List[str]] = []
+    """
+    Fields directly overridden on an instance.
+    Inherited overrides are not included.
+    """
+
+    id: str  # A unique ID for a node
+    overriddenFields: Optional[List[str]] = []  #  An array of properties
 
 
 class DocumentationLink(BaseModel):
