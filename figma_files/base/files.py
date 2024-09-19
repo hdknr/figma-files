@@ -20,3 +20,50 @@ class FigmaFile(BaseModel):
     conpotents: Optional[Dict[str, Component]] = {}  # コンポーネント
     componentSets: Optional[Dict[str, ComponentSet]] = {}  # コンポーネントセット
     tailwind_config: Optional[TailwindConfig] = TailwindConfig()  # tailwind
+
+    def tw_w(self, width):
+        """高さ (h-)"""
+        n = int(width / 4)
+        if n > 96:
+            rem = int(n / 4)
+            self.tailwind_config.set_extennd("width", f"{n}", f"{rem}rem")
+        return f"w-{n}"
+
+    def tw_h(self, height):
+        """幅 (w-)"""
+        n = int(height / 4)
+        if n > 96:
+            rem = int(n / 4)
+            self.tailwind_config.set_extennd("height", f"{n}", f"{rem}rem")
+        return f"h-{n}"
+
+    def tw_color(self, target, fill: Style):
+        # fill スタイルのネーミングルールによる
+        parts = fill.name.split("/")
+        return "-".join([target] + parts[1:])
+
+    def tw_bg(self, fill: Style):
+        """背景色 (bg-)"""
+        return self.tw_color("bg", fill)
+
+    def tw_rounded(self, px):
+        """Border Radius"""
+        # https://tailwindcss.com/docs/border-radius
+        name = "rounded"
+        index = int(px / 2) * 2
+        if index < 2:
+            return ""
+        if index == 2:
+            return f"{name}-sm"
+        if index == 4:
+            return name
+        if index == 6:
+            return f"{name}-md"
+        if index >= 8 and index < 12:
+            return f"{name}-lg"
+        if index >= 12 and index < 16:
+            return f"{name}-xl"
+        if index >= 16 and index < 24:
+            return f"{name}-2xl"
+        if index >= 99998:
+            return f"{name}-full"
