@@ -9,10 +9,12 @@ import requests
 import mimetypes
 from figma_files.node import mapper
 from figma_files.base.files import FigmaFile
+from figma_files.base.utils import sanitize_id
 from lxml import etree
 from cssutils.css import CSSStyleSheet
 from functools import partial
 from bs4 import BeautifulSoup as Soup
+import pandas as pd
 
 
 @click.group()
@@ -172,6 +174,52 @@ def to_html(ctx, path):
 
     canvas_set = figma_file.document["children"]
     list(map(partial(canvas_to_html, figma_file, dst), canvas_set))
+
+
+@group.command()
+@click.argument("path")
+@click.pass_context
+def export_styles(ctx, path):
+    document_path = Path(path) / "document.json"
+    figma = json.load(open(document_path))
+
+    styles = figma["styles"]
+    values = map(
+        lambda i: dict(
+            styleType=i[1]["styleType"],
+            name=i[1]["name"],
+        ),
+        styles.items(),
+    )
+    df = pd.DataFrame(values).sort_values(["styleType", "name"])
+    out = Path(path) / "styles.csv"
+    df.to_csv(out, index=False)
+
+
+@group.command()
+@click.argument("path")
+@click.argument("id")
+@click.pass_context
+def export_node(ctx, path, id):
+    document_path = Path(path) / "document.json"
+    figma = json.load(open(document_path))
+
+    def _walk(node):
+        if node["id"] == id:
+            return node
+
+        children = node.get("children", [])
+        for child in children:
+            res = _walk(child)
+            if res:
+                return res
+
+    node = _walk(figma["document"])
+
+    id_str = sanitize_id(id)
+    output = Path(path) / f"node_{id_str}.json"
+    with open(output, "w") as out:
+        json.dump(node, out, ensure_ascii=False, indent=2)
 
 
 if __name__ == "__main__":
