@@ -5,7 +5,7 @@ from typing import Optional
 from lxml import etree
 from .utils import to_snake
 from ..base.files import FigmaFile
-import re
+from ..base.utils import sanitize_id
 
 
 class Node(BaseModel):
@@ -17,8 +17,7 @@ class Node(BaseModel):
 
     @property
     def sanitized_id(self):
-        sanitized = re.sub(r"[^A-Za-z0-9]", "_", self.id)
-        return sanitized
+        return sanitize_id(self.id)
 
     @property
     def html_attrs(self):
