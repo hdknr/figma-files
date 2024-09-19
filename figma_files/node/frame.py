@@ -98,7 +98,10 @@ class Frame(Node):
     horizontalPadding: Optional[float] = 0
     verticalPadding: Optional[float] = 0
     #
+
+    # The distance between children of the frame. Can be negative. This property is only applicable for auto-layout frames.
     itemSpacing: Optional[float] = 0
+
     counterAxisSpacing: Optional[float] = 0
     #
     layoutPositioning: Optional[Literal["AUTO", "ABSOLUTE"]] = "AUTO"
@@ -189,6 +192,20 @@ class Frame(Node):
 
         return classes
 
+    def tw_class_space(self, parent: etree._Element, file: FigmaFile) -> set:
+        """感覚 (space-*)"""
+        classes = set()
+
+        if self.layoutMode == "NONE":
+            return classes
+        n = int(self.itemSpacing / 4)
+
+        if self.layoutMode == "HORIZONTAL":
+            classes.add(f"space-x-{n}")
+        if self.layoutMode == "VERTICAL":
+            classes.add(f"space-y-{n}")
+        return classes
+
     def tailwind_css(self, parent, file: FigmaFile):
         classes = set()
 
@@ -198,6 +215,7 @@ class Frame(Node):
             | self.tw_class_size(parent, file)
             | self.tw_class_background(parent, file)
             | self.tw_class_align(parent, file)
+            | self.tw_class_space(parent, file)
         )
 
         # flex box

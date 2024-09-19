@@ -199,8 +199,9 @@ def export_styles(ctx, path):
 @group.command()
 @click.argument("path")
 @click.argument("id")
+@click.option("--exclude_children", "-ec", is_flag=True)
 @click.pass_context
-def export_node(ctx, path, id):
+def export_node(ctx, path, id, exclude_children):
     document_path = Path(path) / "document.json"
     figma = json.load(open(document_path))
 
@@ -215,6 +216,8 @@ def export_node(ctx, path, id):
                 return res
 
     node = _walk(figma["document"])
+    if exclude_children:
+        node.pop("children")
 
     id_str = sanitize_id(id)
     output = Path(path) / f"node_{id_str}.json"
