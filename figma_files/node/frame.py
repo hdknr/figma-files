@@ -206,6 +206,24 @@ class Frame(Node):
             classes.add(f"space-y-{n}")
         return classes
 
+    def tw_class_padding(self, parent: etree._Element, file: FigmaFile) -> set:
+        """パディング (p*-)"""
+        classes = set()
+
+        if self.layoutMode == "NONE":
+            return classes
+
+        n = int(self.paddingLeft / 4)
+        classes.add(f"pl-{n}")
+        n = int(self.paddingRight / 4)
+        classes.add(f"pr-{n}")
+        n = int(self.paddingTop / 4)
+        classes.add(f"pt-{n}")
+        n = int(self.paddingBottom / 4)
+        classes.add(f"pb-{n}")
+
+        return classes
+
     def tailwind_css(self, parent, file: FigmaFile):
         classes = set()
 
@@ -216,6 +234,7 @@ class Frame(Node):
             | self.tw_class_background(parent, file)
             | self.tw_class_align(parent, file)
             | self.tw_class_space(parent, file)
+            | self.tw_class_padding(parent, file)
         )
 
         # flex box
