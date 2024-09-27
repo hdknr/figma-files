@@ -9,14 +9,28 @@ class Rectangle(Vector):
     rectangleCornerRadii: Optional[List[float]] = []
     cornerSmoothing: Optional[float] = None
 
-    def to_element(self, parent, sheet, file: FigmaFile, tag="div"):
+    def get_image(self, file: FigmaFile):
+        img = next(filter(lambda i: i.type == "IMAGE", self.fills), None)
+        if img:
+            ref = img.imageRef
+            return file.images.get(ref, None)
+
+    def to_element(self, parent: etree._Element, sheet, file: FigmaFile, tag="div"):
         attrs = {}
         tag = self.resolve_tag(tag)
 
         if tag == "img":
-            img = next(filter(lambda i: i.type == "IMAGE", self.fills), None)
-            if img:
-                ref = img.imageRef
-                attrs["src"] = file.images.get(ref, None) or "#"
+            src = self.get_image(file)
+            if src:
+                attrs["src"] = src
                 elm: etree._Element = etree.SubElement(parent, tag, attrib=attrs)
                 return elm
+
+        if tag == "bg":
+            # 背景イメージ
+            src = self.get_image(file)
+            if src:
+                klass = parent.attrib["class"] or ""
+                klass += f" bg-[url('{src}')] bg-cover"
+                parent.attrib["class"] = klass
+                return parent
