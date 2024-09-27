@@ -4,8 +4,7 @@ from ..base.files import FigmaFile
 from typing import Optional, List, Literal
 from lxml import etree
 from cssutils.css import CSSStyleRule as Rule
-
-
+from .frame import Frame
 
 
 class Text(Vector):
@@ -31,10 +30,24 @@ class Text(Vector):
         attrs.pop("name")
         return attrs
 
-    def to_element(self, parent: etree._Element, sheet, file: FigmaFile, tag="p"):
+    def tw_class_size(self, parent: etree._Element, file: FigmaFile) -> set:
+        ret = set()
+        ret.add(file.tw_w(self.absoluteBoundingBox.width))
+        ret.add(file.tw_h(self.absoluteBoundingBox.height))
+
+        return ret
+
+    def to_element(
+        self,
+        parent: etree._Element,
+        sheet,
+        file: FigmaFile,
+        tag="p",
+        container: Frame = None,
+    ):
         tag = self.resolve_tag(tag)
 
-        classes = []
+        classes = set()
 
         if parent is None:
             return
@@ -47,7 +60,22 @@ class Text(Vector):
         if fill:
             color = file.tw_color("text", fill)
             if color:
-                classes.append(color)
+                classes.add(color)
+        # フォントスタイル
+        if self.style:
+            classes = classes | file.tw_font_styles(self.style)
+
+        if tag == "div":
+            classes = classes | self.tw_class_size(parent, file)
+
+            # TODO: absolute  条件
+            classes.add("absolute")
+            if container:
+                # https://tailwindcss.com/docs/position
+                x = self.absoluteBoundingBox.x - container.absoluteBoundingBox.x
+                y = self.absoluteBoundingBox.y - container.absoluteBoundingBox.y
+                classes.add(file.tw_position("left", x))
+                classes.add(file.tw_position("top", y))
 
         attrs = self.html_attrs
         if classes:
