@@ -168,9 +168,11 @@ def to_html(ctx, path):
     dst.mkdir(exist_ok=True, parents=True)
 
     document_path = Path(path) / "document.json"
+    images_path = Path(path) / "html/img"
     figma = json.load(open(document_path))
-    # document = figma["document"]
-    figma_file = FigmaFile(**figma)
+
+    images_map = dict((i.stem, f"img/{i.name}") for i in images_path.glob("*"))
+    figma_file = FigmaFile(**figma, images=images_map)
 
     canvas_set = figma_file.document["children"]
     list(map(partial(canvas_to_html, figma_file, dst), canvas_set))
