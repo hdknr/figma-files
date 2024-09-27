@@ -2,6 +2,7 @@ from .vector import Vector
 from typing import Optional, List
 from ..base.files import FigmaFile
 from lxml import etree
+from .frame import Frame
 
 
 class Rectangle(Vector):
@@ -15,7 +16,14 @@ class Rectangle(Vector):
             ref = img.imageRef
             return file.images.get(ref, None)
 
-    def to_element(self, parent: etree._Element, sheet, file: FigmaFile, tag="div"):
+    def to_element(
+        self,
+        parent: etree._Element,
+        sheet,
+        file: FigmaFile,
+        tag="div",
+        container: Frame = None,
+    ):
         attrs = {}
         tag = self.resolve_tag(tag)
 
