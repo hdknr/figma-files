@@ -306,10 +306,19 @@ class TypeStyle(BaseModel):
     fills: Optional[List[Paint]] = []
     hyperlink: Optional[Hyperlink] = None
     opentypeFlags: Optional[dict] = {}
+
     lineHeightPx: Optional[float] = None
+    # Line height in px
+
     lineHeightPercent: Optional[float] = 100
+    # Line height as a percentage of normal line height. This is deprecated; in a future version of the API only
+
     lineHeightPercentFontSize: Optional[float] = None
+    # Line height as a percentage of the font size. Only returned when lineHeightPercent is not 100.
+
     lineHeightUnit: Optional[Literal["PIXELS", "FONT_SIZE_%", "INTRINSIC_%"]] = None
+    # The unit of the line height value specified by the user.
+
     isOverrideOverTextStyle: Optional[bool] = None
     semanticWeight: Optional[Literal["BOLD", "NORMAL"]] = None
     semanticItalic: Optional[Literal["ITALIC", "NORMAL"]] = None
