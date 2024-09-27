@@ -1,6 +1,6 @@
 from typing import Dict, Optional
 from pydantic import BaseModel
-from .property_types import Style, Component, ComponentSet
+from .property_types import Style, Component, ComponentSet, TypeStyle
 
 
 class TailwindConfig(BaseModel):
@@ -21,6 +21,19 @@ class FigmaFile(BaseModel):
     componentSets: Optional[Dict[str, ComponentSet]] = {}  # コンポーネントセット
     tailwind_config: Optional[TailwindConfig] = TailwindConfig()  # tailwind
     images: Optional[Dict[str, str]] = {}  # image
+
+    def tw_position(self, postion: str, value: float):
+        # https://tailwindcss.com/docs/top-right-bottom-left
+        if 1 == int(value):
+            return f"{postion}-px"
+
+        n = int(value / 4)
+        if n > 96:
+            # rem = int(n / 4)
+            # TOOD: config 設定
+            pass
+
+        return f"{postion}-{n}"
 
     def tw_w(self, width):
         """高さ (h-)"""
@@ -67,7 +80,7 @@ class FigmaFile(BaseModel):
         if index >= 16 and index < 24:
             return f"{name}-2xl"
         if index >= 99998:
-                return f"{name}-full"
+            return f"{name}-full"
 
         def tw_font_styles(self, style: TypeStyle):
             """フォントスタイル"""
