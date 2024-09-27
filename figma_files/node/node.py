@@ -33,7 +33,7 @@ class Node(BaseModel):
         return elm
 
     def resolve_tag(self, default):
-        ma = re.search(r"^(?P<tag>.+)_(?P<name>.*)$", self.name)
+        ma = re.search(r"^(?P<tag>[^_]+)_?(?P<name>.*)$", self.name)
         ma = ma and ma.groupdict() or {}
         tag = ma.get("tag", None) or default
         tag = {"anchor": "a", "image": "img"}.get(tag, None) or tag
