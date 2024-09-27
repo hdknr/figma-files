@@ -162,8 +162,9 @@ def canvas_to_html(file: FigmaFile, output: Path, canvas: dict):
 
 @group.command()
 @click.argument("path")
+@click.option("--page", "-p", default=None)
 @click.pass_context
-def to_html(ctx, path):
+def to_html(ctx, path, page):
     dst = Path(path) / "html"
     dst.mkdir(exist_ok=True, parents=True)
 
@@ -175,6 +176,8 @@ def to_html(ctx, path):
     figma_file = FigmaFile(**figma, images=images_map)
 
     canvas_set = figma_file.document["children"]
+    if page:
+        canvas_set = list(filter(lambda i: i["name"] == page, canvas_set))
     list(map(partial(canvas_to_html, figma_file, dst), canvas_set))
 
 
