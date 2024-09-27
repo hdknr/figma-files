@@ -6,6 +6,8 @@ from lxml import etree
 from cssutils.css import CSSStyleRule as Rule
 
 
+
+
 class Text(Vector):
     characters: str
     style: TypeStyle
@@ -30,6 +32,8 @@ class Text(Vector):
         return attrs
 
     def to_element(self, parent: etree._Element, sheet, file: FigmaFile, tag="p"):
+        tag = self.resolve_tag(tag)
+
         classes = []
 
         if parent is None:
@@ -48,6 +52,8 @@ class Text(Vector):
         attrs = self.html_attrs
         if classes:
             attrs["class"] = " ".join(classes)
+        if tag == "a":
+            attrs["href"] = "#"
 
         elm: etree._Element = etree.SubElement(parent, tag, attrib=attrs)
         elm.text = self.characters
