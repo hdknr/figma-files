@@ -8,6 +8,7 @@ import json
 import requests
 import mimetypes
 from figma_files.node import mapper
+from figma_files.node.frame import Frame
 from figma_files.base.files import FigmaFile
 from figma_files.base.utils import sanitize_id
 from lxml import etree
@@ -76,7 +77,7 @@ def find_node(document, type, name):
                     return node
 
 
-def walk_frame(elm, sheet, file: FigmaFile, node):
+def walk_frame(elm, sheet, file: FigmaFile, node, container: Frame = None):
     if isinstance(node, dict) and "type" in node and "name" in node:
         klass = mapper.get(node["type"], None)
         if not klass:
@@ -86,14 +87,15 @@ def walk_frame(elm, sheet, file: FigmaFile, node):
         children = node.get("children", [])
         try:
             instance = klass(**node)
-            elm = instance.to_element(elm, sheet, file)
+            elm = instance.to_element(elm, sheet, file, container=container)
         except Exception:
             import traceback
 
             print(traceback.format_exc())
 
+        container = instance if isinstance(instance, Frame) else None
         for child in children:
-            walk_frame(elm, sheet, file, child)
+            walk_frame(elm, sheet, file, child, container=container)
 
 
 def get_meta():
