@@ -20,6 +20,7 @@ class FigmaFile(BaseModel):
     conpotents: Optional[Dict[str, Component]] = {}  # コンポーネント
     componentSets: Optional[Dict[str, ComponentSet]] = {}  # コンポーネントセット
     tailwind_config: Optional[TailwindConfig] = TailwindConfig()  # tailwind
+    images: Optional[Dict[str, str]] = {}  # image
 
     def tw_w(self, width):
         """高さ (h-)"""
