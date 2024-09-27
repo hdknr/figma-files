@@ -38,9 +38,7 @@ class Frame(Node):
     blendMode: BlendMode
     preserveRatio: Optional[bool] = False
     constraints: Optional[LayoutConstraint] = None
-    layoutAlign: Optional[
-        Literal["INHERIT", "STRETCH", "MIN", "CENTER", "MAX", "STRETCH"]
-    ] = None
+    layoutAlign: Optional[Literal["INHERIT", "STRETCH", "MIN", "CENTER", "MAX", "STRETCH"]] = None
     #
     transitionNodeID: Optional[str] = None
     transitionDuration: Optional[float] = None
@@ -83,9 +81,7 @@ class Frame(Node):
     # MAX: 右揃え(HORIZONTAL), 下揃え(VERTICAL)
     # SPACE_BETWEEN: 均等
     # BASELINE: 下揃え (HORIZONTALの場合のみ)
-    primaryAxisAlignItems: Optional[
-        Literal["MIN", "CENTER", "MAX", "SPACE_BETWEEN"]
-    ] = "MIN"
+    primaryAxisAlignItems: Optional[Literal["MIN", "CENTER", "MAX", "SPACE_BETWEEN"]] = "MIN"
     counterAxisAlignItems: Optional[Literal["MIN", "CENTER", "MAX", "BASELINE"]] = "MIN"
 
     counterAxisAlignContent: Optional[Literal["AUTO", "SPACE_BETWEEN"]] = "AUTO"
@@ -255,6 +251,7 @@ class Frame(Node):
         if parent.tag == "body":
             tag = "section"
             classes += ["min-h-screen flex-col"]
+            attrs["name"] = "frame"
         else:
             names = self.name.split("_")
             # semantic structure
