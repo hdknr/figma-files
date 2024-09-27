@@ -35,8 +35,10 @@ class Vector(Node):
     relativeTransform: Optional[Transform] = None
     #
     isMask: Optional[bool] = False
-    #
+
+    # fills: An array of fill paints applied to the node
     fills: Optional[List[Paint]] = []
+
     fillGeometry: Optional[List[Paint]] = []
     #
     fillOverrideTable: Optional[dict] = None
