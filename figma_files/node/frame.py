@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .node import Node
 from ..base.files import FigmaFile
 from ..base.property_types import (
@@ -140,25 +142,18 @@ class Frame(Node):
 
         return classes
 
-    def tw_class_background(self, parent: etree._Element, file: FigmaFile) -> set:
-        """背景色"""
+    def tw_class_space(self, parent: etree._Element, file: FigmaFile) -> set:
+        """感覚 (space-*)"""
         classes = set()
-        # 背景色
-        fill = self.styles and file.styles.get(self.styles.get("fill", None), None)
-        if fill:
-            bg = file.tw_bg(fill)
-            if bg:
-                classes.add(bg)
-        return classes
 
-    def tw_class_corner(self, parent: etree._Element, file: FigmaFile) -> set:
-        """角丸"""
-        classes = set()
-        # 角丸
-        if self.cornerRadius:
-            rounded = file.tw_rounded(self.cornerRadius)
-            if rounded:
-                classes.add(rounded)
+        if self.layoutMode == "NONE":
+            return classes
+        n = int(self.itemSpacing / 4)
+
+        if self.layoutMode == "HORIZONTAL":
+            classes.add(f"space-x-{n}")
+        if self.layoutMode == "VERTICAL":
+            classes.add(f"space-y-{n}")
         return classes
 
     def tw_class_align(self, parent: etree._Element, file: FigmaFile) -> set:
@@ -186,20 +181,6 @@ class Frame(Node):
             if y:
                 classes.add(f"items-{y}")
 
-        return classes
-
-    def tw_class_space(self, parent: etree._Element, file: FigmaFile) -> set:
-        """感覚 (space-*)"""
-        classes = set()
-
-        if self.layoutMode == "NONE":
-            return classes
-        n = int(self.itemSpacing / 4)
-
-        if self.layoutMode == "HORIZONTAL":
-            classes.add(f"space-x-{n}")
-        if self.layoutMode == "VERTICAL":
-            classes.add(f"space-y-{n}")
         return classes
 
     def tw_class_padding(self, parent: etree._Element, file: FigmaFile) -> set:
@@ -243,7 +224,7 @@ class Frame(Node):
 
         return classes
 
-    def to_element(self, parent, sheet, file: FigmaFile, tag="div"):
+    def to_element(self, parent, sheet, file: FigmaFile, tag="div", container: Frame = None):
         attrs = self.html_attrs
         classes = ["relative"]
 
