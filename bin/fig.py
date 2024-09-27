@@ -49,7 +49,7 @@ def get_doc(ctx, file_key, no_image, output):
         with open(path, "w") as out:
             json.dump(images, out, indent=2, ensure_ascii=False)
 
-        img = Path(output) / "img"
+        img = Path(output) / "html/img"
         img.mkdir(exist_ok=True)
 
         def _download(entry):
@@ -58,7 +58,7 @@ def get_doc(ctx, file_key, no_image, output):
             response = requests.get(url)
             if response.status_code == 200:
                 ext = mimetypes.guess_extension(response.headers["Content-Type"])
-                path = img / f"{key}.{ext}"
+                path = img / f"{key}{ext}"
                 with open(path, "wb") as f:
                     f.write(response.content)
 
