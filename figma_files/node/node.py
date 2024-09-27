@@ -6,6 +6,7 @@ from lxml import etree
 from .utils import to_snake
 from ..base.files import FigmaFile
 from ..base.utils import sanitize_id
+import re
 
 
 class Node(BaseModel):
@@ -30,3 +31,10 @@ class Node(BaseModel):
     def to_element(self, parent, sheet, file: FigmaFile, tag="div"):
         elm: etree._Element = etree.SubElement(parent, tag, attrib=self.html_attrs)
         return elm
+
+    def resolve_tag(self, default):
+        ma = re.search(r"^(?P<tag>.+)_(?P<name>.*)$", self.name)
+        ma = ma and ma.groupdict() or {}
+        tag = ma.get("tag", None) or default
+        tag = {"anchor": "a", "image": "img"}.get(tag, None) or tag
+        return tag
