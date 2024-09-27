@@ -25,8 +25,14 @@ class Vector(Node):
     #
     opacity: Optional[float] = 1
     absoluteBoundingBox: Optional[Rectangle] = None
+    # Bounding box of the node in absolute space coordinates
+
     absoluteRenderBounds: Optional[Rectangle] = None
-    #
+    # The actual bounds of a node accounting for drop shadows, thick strokes,
+    # and anything else that may fall outside the node's regular bounding box defined in x, y, width, and height.
+    # The x and y inside this property represent the absolute position of the node on the page.
+    # This value will be null if the node is invisible.
+
     transitionNodeID: Optional[str] = None
     transitionDuration: Optional[float] = None
     transitionEasing: Optional[EasingType] = None
