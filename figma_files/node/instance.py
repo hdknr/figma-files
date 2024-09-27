@@ -18,7 +18,7 @@ class Instance(Frame):
     overrides: Optional[List[Overrides]] = []
     # An array of all of the fields directly overridden on this instance. Inherited overrides are not included.
 
-    def to_element(self, parent, sheet, file: FigmaFile, tag="div"):
+    def to_element(self, parent, sheet, file: FigmaFile, tag="div", container: Frame = None):
         if self.name.startswith("anchor_"):
             return self.to_anchor(parent, sheet, file)
 
