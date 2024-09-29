@@ -84,5 +84,32 @@ class Text(Vector):
             attrs["href"] = "#"
 
         elm: etree._Element = etree.SubElement(parent, tag, attrib=attrs)
-        elm.text = self.characters
+
+        if not self.characterStyleOverrides:
+            elm.text = self.characters
+            return elm
+
+        # 拡張スタイルがあれば、spanで切り替える
+        chars = list(self.characters)
+        overrides = self.characterStyleOverrides + ([0.0] * len(chars))
+
+        span: etree.Element = None
+        prev_o = -1.0
+        for c, o in zip(chars, overrides):
+            attrib = {}
+            if prev_o != o:
+                if o == 0.0:
+                    span = etree.SubElement(elm, "span")
+                else:
+                    # テキストの拡張スタイル
+                    style = self.styleOverrideTable.get(str(int(o)), None)
+                    if style and "inheritFillStyleId" in style:
+                        id = style["inheritFillStyleId"]
+                        fill = file.styles.get(id)
+                        name = file.tw_color("text", fill)
+                        attrib["class"] = name
+
+                    span = etree.SubElement(elm, "span", attrib=attrib)
+            prev_o = o
+            span.text = (span.text or "") + c
         return elm
