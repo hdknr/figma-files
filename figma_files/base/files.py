@@ -82,31 +82,31 @@ class FigmaFile(BaseModel):
         if index >= 99998:
             return f"{name}-full"
 
-        def tw_font_styles(self, style: TypeStyle):
-            """フォントスタイル"""
-            # https://tailwindcss.com/docs/font-family
-            # https://tailwindcss.com/docs/line-height
+    def tw_font_styles(self, style: TypeStyle):
+        """フォントスタイル"""
+        # https://tailwindcss.com/docs/font-family
+        # https://tailwindcss.com/docs/line-height
 
-            res = set()
-            # サイズ (https://tailwindcss.com/docs/font-size)
-            px = int(style.fontSize)
-            mp = {
-                128: "9xl",
-                96: "8xl",
-                72: "7xl",
-                60: "6xl",
-                48: "5xl",
-                36: "4xl",
-                30: "3xl",
-                24: "2xl",
-                20: "xl",
-                18: "lg",
-                16: "base",
-                14: "sm",
-                12: "xs",
-            }
-            sz, sym = next(filter(lambda i: i[0] <= px, mp.items()), (None, None))
-            if not sym:
-                sym = mp.values()[-1]
-            res.add(f"text-{sym}")
-            return res
+        res = set()
+        # サイズ (https://tailwindcss.com/docs/font-size)
+        px = int(style.fontSize)
+        mp = {
+            128: "9xl",
+            96: "8xl",
+            72: "7xl",
+            60: "6xl",
+            48: "5xl",
+            36: "4xl",
+            30: "3xl",
+            24: "2xl",
+            20: "xl",
+            18: "lg",
+            16: "base",
+            14: "sm",
+            12: "xs",
+        }
+        sz, sym = next(filter(lambda i: i[0] <= px, mp.items()), (None, None))
+        if not sym:
+            sym = mp.values()[-1]
+        res.add(f"text-{sym}")
+        return res
