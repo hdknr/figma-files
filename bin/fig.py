@@ -110,7 +110,9 @@ def create_meta(head, meta):
 
 
 def add_tailwind(head):
-    elm = etree.SubElement(head, "script", attrib={"src": "https://cdn.tailwindcss.com"})
+    elm = etree.SubElement(
+        head, "script", attrib={"src": "https://cdn.tailwindcss.com"}
+    )
     elm.text = ""
     return elm
 
@@ -207,6 +209,7 @@ def export_styles(ctx, path):
 @click.option("--exclude_children", "-ec", is_flag=True)
 @click.pass_context
 def export_node(ctx, path, id, exclude_children):
+    id = id.replace("_", ":")
     document_path = Path(path) / "document.json"
     figma = json.load(open(document_path))
 

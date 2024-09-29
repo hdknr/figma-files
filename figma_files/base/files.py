@@ -109,4 +109,24 @@ class FigmaFile(BaseModel):
         if not sym:
             sym = mp.values()[-1]
         res.add(f"text-{sym}")
+
+        # https://tailwindcss.com/docs/font-weight
+        w = int(style.fontWeight)
+        mp = {
+            900: "black",
+            800: "extrabold",
+            700: "bold",
+            600: "semibold",
+            500: "medium",
+            400: "normal",
+            300: "light",
+            200: "extraylight",
+            100: "thin",
+            0: "",
+        }
+        sz, sym = next(filter(lambda i: i[0] <= w, mp.items()), (None, None))
+        if not sym:
+            sym = mp.values()[-1]
+        res.add(f"font-{sym}")
+
         return res
