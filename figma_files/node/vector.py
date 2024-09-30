@@ -18,17 +18,21 @@ class Vector(Node):
     exportSettings: Optional[list[ExportSetting]] = []
     blendMode: BlendMode
     preserveRatio: Optional[bool] = False
-    layoutAlign: Optional[
-        Literal["INHERIT", "STRETCH", "MIN", "CENTER", "MAX", "STRETCH"]
-    ] = None
+    layoutAlign: Optional[Literal["INHERIT", "STRETCH", "MIN", "CENTER", "MAX", "STRETCH"]] = None
 
     layoutGrow: Optional[float] = 0
     constraints: Optional[LayoutConstraint] = None
     #
     opacity: Optional[float] = 1
     absoluteBoundingBox: Optional[Rectangle] = None
+    # Bounding box of the node in absolute space coordinates
+
     absoluteRenderBounds: Optional[Rectangle] = None
-    #
+    # The actual bounds of a node accounting for drop shadows, thick strokes,
+    # and anything else that may fall outside the node's regular bounding box defined in x, y, width, and height.
+    # The x and y inside this property represent the absolute position of the node on the page.
+    # This value will be null if the node is invisible.
+
     transitionNodeID: Optional[str] = None
     transitionDuration: Optional[float] = None
     transitionEasing: Optional[EasingType] = None
@@ -37,8 +41,10 @@ class Vector(Node):
     relativeTransform: Optional[Transform] = None
     #
     isMask: Optional[bool] = False
-    #
+
+    # fills: An array of fill paints applied to the node
     fills: Optional[List[Paint]] = []
+
     fillGeometry: Optional[List[Paint]] = []
     #
     fillOverrideTable: Optional[dict] = None
